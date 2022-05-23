@@ -1,4 +1,4 @@
-import * as React from "react";
+import { React, useState } from "react";
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
 import Button from "@mui/material/Button";
@@ -38,7 +38,7 @@ export default function JobCard({ job }) {
       </Box>
 
       <Divider variant="middle" />
-      <Box sx={{ typography: 'overline' }}>Skills:</Box>
+      <Box sx={{ typography: "overline" }}>Skills:</Box>
       <Stack
         direction="column"
         spacing={0.4}

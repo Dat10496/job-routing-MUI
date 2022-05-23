@@ -1,31 +1,52 @@
-import React from "react";
-import jobs from "../jobs.json";
+import { React, useState, useEffect } from "react";
 import JobCard from "../components/JobCard";
-import { Grid, Pagination } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { Box, Grid, Pagination, PaginationItem } from "@mui/material";
+import { Link, useParams } from "react-router-dom";
+import axios from "axios";
 
-function HomePages({ num1, num2 }) {
-  const navigate = useNavigate();
-  const jobPage = jobs.length
-  console.log(jobPage)
+function HomePages() {
+  const limit = 5;
+  const { page } = useParams();
+  const num1 = limit * (page - 1);
+  const num2 = limit * page;
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("http://localhost:5000/jobs");
+        const result = response.data;
+        setStorageData(result);
+      } catch (error) {
+        console.log(error, "error");
+      }
+    };
+
+    fetchData();
+  }, []);
+  const [storageData, setStorageData] = useState([]);
 
   return (
     <>
       <Grid container spacing={0.5}>
-        {jobs.slice(num1, num2).map((job) => (
+        {storageData.slice(num1, num2).map((job) => (
           <Grid key={job.id} item xs={12} md={4}>
             <JobCard job={job} />
           </Grid>
         ))}
       </Grid>
-      <Grid sx={{ display: "flex", justifyContent: "center", m: 1 }}>
+      <Box sx={{ display: "flex", justifyContent: "center", m: 1 }}>
         <Pagination
-          count={jobPage / 5}
+          count={Math.ceil(storageData.length / limit)}
           color="primary"
-          onChange={(e, p) => navigate(`/page/${p}`)}
+          renderItem={(item) => (
+            <PaginationItem
+              component={Link}
+              to={`/page/${item.page}`}
+              {...item}
+            />
+          )}
         />
-      </Grid>
+      </Box>
     </>
   );
 }

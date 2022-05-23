@@ -1,12 +1,11 @@
-import { React } from "react";
+import { React, useEffect, useState } from "react";
 import InputBase from "@mui/material/InputBase";
 import { NavLink, useSearchParams } from "react-router-dom";
-import jobs from "../jobs.json";
 import styled from "@emotion/styled";
 import { Typography, Paper, alpha, Divider } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { Box } from "@mui/system";
-
+import axios from "axios";
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
   color: "inherit",
@@ -61,7 +60,20 @@ const SearchIconWrapper = styled("div")(({ theme }) => ({
 
 function SearchParams() {
   let [searchParams, setSearchParams] = useSearchParams();
-  
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("http://localhost:5000/jobs");
+        const result = response.data;
+        setStorageData(result);
+      } catch (error) {
+        console.log(error, "error");
+      }
+    };
+
+    fetchData();
+  }, []);
+  const [storageData, setStorageData] = useState([]);
 
   return (
     <Paper elevation={24} sx={style}>
@@ -92,7 +104,7 @@ function SearchParams() {
         />
       </Search>
       <Divider variant="middle" color="primary.dark" sx={{ mt: 1 }} />
-      {jobs
+      {storageData
         .filter((job) => {
           let filter = searchParams.get("filter");
           if (!filter) return "";
@@ -100,9 +112,12 @@ function SearchParams() {
           return name.startsWith(filter.toLowerCase());
         })
         .map((job) => (
-          <Box sx={{flexWrap:'wrap', ml:2, }}>
-            <NavLink to={`/job/${job.id}`} key={job.id}  underline="hover">
-              <Typography sx={{ m: 0.5, color:'warning.light' }} variant="caption text">
+          <Box sx={{ flexWrap: "wrap", ml: 2 }}>
+            <NavLink to={`/job/${job.id}`} key={job.id} underline="hover">
+              <Typography
+                sx={{ m: 0.5, color: "warning.light" }}
+                variant="caption text"
+              >
                 {job.title}
               </Typography>
             </NavLink>

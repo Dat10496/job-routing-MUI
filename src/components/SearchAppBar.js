@@ -8,9 +8,8 @@ import Typography from "@mui/material/Typography";
 import SearchParams from "./SearchParams";
 import MenuIcon from "@mui/icons-material/Menu";
 import LoginIcon from "@mui/icons-material/Login";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Button, InputBase, Modal, Paper } from "@mui/material";
-import FormSignIn from "../form/FormSignIn";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -54,13 +53,8 @@ const style = {
 };
 
 export default function SearchAppBar() {
-  const navigate  = useNavigate()
-  const [open, setOpen] = useState(false);
+  const location = useLocation();
   const [openSearch, setOpenSearch] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => {
-    navigate("../", {repalce:true})
-    setOpen(false)};
   const handleOpenSearch = () => setOpenSearch(true);
   const handleCloseSearch = () => setOpenSearch(false);
 
@@ -109,25 +103,10 @@ export default function SearchAppBar() {
           <Box
             sx={{ display: "flex", flexGrow: 1, justifyContent: "flex-end" }}
           >
-            <Button onClick={handleOpen} component={Link} to={"/log-in"}>
+            <Button state={{ from: location }} component={Link} to={"/log-in"}>
               <LoginIcon sx={{ mr: 1 }}></LoginIcon>
-              <Typography>Sign In</Typography>
+              {<Typography>Sign In</Typography>}
             </Button>
-            <Modal
-              open={open}
-              onClose={handleClose}
-              sx={{
-                width: 500,
-                height: 500,
-                position: "absolute",
-                left: 400,
-                top: 80,
-              }}
-            >
-              <Paper elevation={24} sx={style}>
-                <FormSignIn />
-              </Paper>
-            </Modal>
           </Box>
         </Toolbar>
       </AppBar>

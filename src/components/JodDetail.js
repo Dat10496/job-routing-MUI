@@ -1,27 +1,36 @@
-import * as React from "react";
+import { React, useEffect, useState } from "react";
 import Chip from "@mui/material/Chip";
 import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
 import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
-import jobs from "../jobs.json";
 import { useParams } from "react-router-dom";
 import { Container, Paper } from "@mui/material";
 import LocationCityIcon from "@mui/icons-material/LocationCity";
 import EventIcon from "@mui/icons-material/Event";
 import PriceCheckIcon from "@mui/icons-material/PriceCheck";
+import axios from "axios";
 
 export default function JobDetail() {
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("http://localhost:5000/jobs");
+        const result = response.data;
+        setStorageData(result);
+      } catch (error) {
+        console.log(error, "error");
+      }
+    };
+
+    fetchData();
+  }, []);
+  const [storageData, setStorageData] = useState([]);
+
   const { id } = useParams();
 
-  const hihi = jobs.length
-  console.log(hihi)
-
-  
-  
-
   // find job from id
-  const job = jobs.find((job) => job.id === id);
+  const job = storageData.find((job) => job.id === id);
 
   if (!job)
     return (

@@ -1,8 +1,8 @@
 import React from "react";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import SearchAppBar from "./components/SearchAppBar";
-import Routes from "./components/Routes";
 import { CssBaseline } from "@mui/material";
+import Router from "./components/Router";
 
 const theme = createTheme({
   palette: {
@@ -16,7 +16,7 @@ function App() {
       <>
         <CssBaseline />
         <SearchAppBar />
-        <Routes />
+        <Router />
       </>
     </ThemeProvider>
   );
