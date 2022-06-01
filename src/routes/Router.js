@@ -1,10 +1,8 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
-
 import HomePages from "../pages/HomePage";
-import JobDetail from "./JodDetail";
-
-import FormSignIn from "../form/FormSignIn";
+import JobDetail from "../components/JodDetail";
+import SignInPage from "../pages/SignInPage";
 
 const Router = () => {
   return (
@@ -12,8 +10,8 @@ const Router = () => {
       <Routes>
         <Route path="/" element={<HomePages />} />
         <Route path="/page/:page" element={<HomePages />} />
-        <Route path="/log-in" element={<FormSignIn />} />
         <Route path="/job/:id" element={<JobDetail />} />
+        <Route path="/log-in" element={<SignInPage />} />
       </Routes>
     </>
   );

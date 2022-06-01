@@ -1,11 +1,19 @@
 import { React, useEffect, useState } from "react";
 import InputBase from "@mui/material/InputBase";
-import { NavLink, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import styled from "@emotion/styled";
-import { Typography, Paper, alpha, Divider } from "@mui/material";
+import {
+  Paper,
+  alpha,
+  Divider,
+  ListItem,
+  ListItemButton,
+  ListItemText,
+} from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { Box } from "@mui/system";
-import axios from "axios";
+import apiService from "../app/apiService";
+import { Link } from "react-router-dom";
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
   color: "inherit",
@@ -31,6 +39,7 @@ const style = {
   transform: "translate(-50%, -50%)",
   with: 300,
   height: 500,
+  p: 1,
 };
 
 const Search = styled("div")(({ theme }) => ({
@@ -60,10 +69,12 @@ const SearchIconWrapper = styled("div")(({ theme }) => ({
 
 function SearchParams() {
   let [searchParams, setSearchParams] = useSearchParams();
+  const [storageData, setStorageData] = useState([]);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/jobs");
+        const response = await apiService.get("/jobs");
         const result = response.data;
         setStorageData(result);
       } catch (error) {
@@ -73,7 +84,6 @@ function SearchParams() {
 
     fetchData();
   }, []);
-  const [storageData, setStorageData] = useState([]);
 
   return (
     <Paper elevation={24} sx={style}>
@@ -112,15 +122,17 @@ function SearchParams() {
           return name.startsWith(filter.toLowerCase());
         })
         .map((job) => (
-          <Box sx={{ flexWrap: "wrap", ml: 2 }}>
-            <NavLink to={`/job/${job.id}`} key={job.id} underline="hover">
-              <Typography
-                sx={{ m: 0.5, color: "warning.light" }}
-                variant="caption text"
-              >
-                {job.title}
-              </Typography>
-            </NavLink>
+          <Box sx={{ display: "flex", flexWrap: "wrap", ml: 2 }}>
+            <ListItem
+              key={job.id}
+              component={Link}
+              to={`/job/${job.id}`}
+              sx={{ color: "white", p: 0 }}
+            >
+              <ListItemButton sx={{ p: 0 }}>
+                <ListItemText primary={job.title} />
+              </ListItemButton>
+            </ListItem>
           </Box>
         ))}
     </Paper>

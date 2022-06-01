@@ -2,7 +2,7 @@ import { React, useState, useEffect } from "react";
 import JobCard from "../components/JobCard";
 import { Box, Grid, Pagination, PaginationItem } from "@mui/material";
 import { Link, useParams } from "react-router-dom";
-import axios from "axios";
+import apiService from "../app/apiService";
 
 function HomePages() {
   const limit = 5;
@@ -13,7 +13,7 @@ function HomePages() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/jobs");
+        const response = await apiService.get("/jobs");
         const result = response.data;
         setStorageData(result);
       } catch (error) {

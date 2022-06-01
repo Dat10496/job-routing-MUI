@@ -8,8 +8,10 @@ import Typography from "@mui/material/Typography";
 import SearchParams from "./SearchParams";
 import MenuIcon from "@mui/icons-material/Menu";
 import LoginIcon from "@mui/icons-material/Login";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button, InputBase, Modal, Paper } from "@mui/material";
+import useAuth from "../hooks/useAuth";
+import AccountCircle from "@mui/icons-material/AccountCircle";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -52,11 +54,19 @@ const style = {
   height: 400,
 };
 
-export default function SearchAppBar() {
+export default function MainHeader() {
+  let { user } = useAuth();
+  let navigate = useNavigate();
+  let auth = useAuth();
+
   const location = useLocation();
   const [openSearch, setOpenSearch] = useState(false);
   const handleOpenSearch = () => setOpenSearch(true);
   const handleCloseSearch = () => setOpenSearch(false);
+
+  const Logout = async () => {
+    auth.logout(() => navigate("/"));
+  };
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -74,8 +84,13 @@ export default function SearchAppBar() {
           <Typography
             variant="h6"
             noWrap
-            component="div"
-            sx={{ display: { xs: "none", sm: "block" } }}
+            component={Link}
+            sx={{
+              display: { xs: "none", sm: "block" },
+              color: "white",
+              textDecoration: "none",
+            }}
+            to="/page/1"
           >
             Job Route
           </Typography>
@@ -96,17 +111,66 @@ export default function SearchAppBar() {
               top: 80,
             }}
           >
-            <Paper elevation={24} sx={style}>
+            <Paper elevation={24} sx={style} mt={0.5}>
               <SearchParams />
             </Paper>
           </Modal>
           <Box
-            sx={{ display: "flex", flexGrow: 1, justifyContent: "flex-end" }}
+            sx={{
+              display: "flex",
+              flexGrow: 1,
+              justifyContent: "flex-end",
+              alignItems: "center",
+              p: 0.5,
+            }}
           >
-            <Button state={{ from: location }} component={Link} to={"/log-in"}>
-              <LoginIcon sx={{ mr: 1 }}></LoginIcon>
-              {<Typography>Sign In</Typography>}
-            </Button>
+            {user ? (
+              <>
+                <AccountCircle sx={{ mr: 1 }} />
+                {user.username}{" "}
+              </>
+            ) : (
+              ""
+            )}
+            {user ? (
+              <Button
+                state={{ from: location }}
+                component={Link}
+                to={"/"}
+                onClick={Logout}
+              >
+                <LoginIcon sx={{ color: "white" }}></LoginIcon>
+              </Button>
+            ) : (
+              <Button
+                state={{ from: location }}
+                component={Link}
+                to={"/log-in"}
+              >
+                <LoginIcon sx={{ color: "white" }}></LoginIcon>
+              </Button>
+            )}
+
+            {user ? (
+              <Typography
+                component={Link}
+                to={"/"}
+                state={{ from: location }}
+                sx={{ color: "white", textDecoration: "none" }}
+                onClick={Logout}
+              >
+                Sign out
+              </Typography>
+            ) : (
+              <Typography
+                component={Link}
+                to={"/log-in"}
+                state={{ from: location }}
+                sx={{ color: "white", textDecoration: "none" }}
+              >
+                Sign in
+              </Typography>
+            )}
           </Box>
         </Toolbar>
       </AppBar>

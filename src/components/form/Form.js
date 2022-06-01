@@ -24,44 +24,49 @@ const style = {
 
 const FormSignIn = () => {
   const [showPassword, setShowPassword] = useState(true);
-  const [userInfo, setUserInfo] = useState({});
+  const [userInfo, setUserInfo] = useState();
 
   let navigate = useNavigate();
   const location = useLocation();
 
-  const defaultValues = {
-    username: "votada",
-    password: "123456",
-    remember: true,
-  };
-
-  const methods = useForm({ defaultValues });
+  // const defaultValues = {
+  //   username: "votada",
+  //   password: "123456",
+  //   remember: true,
+  // };
 
   const {
+    register,
     setError,
     handleSubmit,
     control,
     formState: { errors, isSubmitting },
-  } = methods;
+    formState,
+  } = useForm();
 
-  const onSubmit = (data) => {
-    const checkUserExisted = async () => {
-      try {
-        const res = await axios.post("http://localhost:4000/users", {
+  // const {
+  //   setError,
+  //   handleSubmit,
+  //   control,
+  //   formState: { errors, isSubmitting },
+  // } = methods;
+
+  const onSubmit = async (data) => {
+    try {
+      // const res = await axios.post("http://localhost:4000/users");
+      const res = [
+        {
+          userid: 1,
           username: "votada",
-          password: "123456",
-          remember: true,
-        });
-        console.log(res);
+        },
+      ];
+      const userLogged = res.find((e) => e.username === data.username);
+      // console.log(userLogged);
+      setUserInfo(userLogged);
+    } catch (error) {
+      console.log(error);
+    }
 
-        const userLogged = res.data.find((e) => e.username === data.username);
-        console.log(userLogged);
-        setUserInfo(userLogged);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    checkUserExisted();
     setError("afterSubmit", { message: "server response error" });
     navigate(location.state.from.pathname, { replace: true });
   };
@@ -98,7 +103,7 @@ const FormSignIn = () => {
           </Typography>
         </Box>
 
-        <form onSubmit={handleSubmit(onSubmit)} methods={methods}>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <Stack spacing={3}>
             <Controller
               name="username"

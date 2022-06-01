@@ -1,14 +1,18 @@
-import { React, useState } from "react";
+import { React } from "react";
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Paper } from "@mui/material";
+import useAuth from "../hooks/useAuth";
 
 export default function JobCard({ job }) {
+  let { user } = useAuth();
+  const location = useLocation();
+
   return (
     <Paper
       sx={{
@@ -49,7 +53,6 @@ export default function JobCard({ job }) {
         <Chip label={job.skills[1]} color="error" />
         <Chip label={job.skills[2]} color="error" />
       </Stack>
-      {/* <Typography variant="body2">{job.description}</Typography> */}
 
       <Box
         sx={{
@@ -59,9 +62,10 @@ export default function JobCard({ job }) {
         }}
       >
         <Button
+          state={{ from: location }}
           variant="outlined"
           component={Link}
-          to={`/job/${job.id}`}
+          to={user ? `/job/${job.id}` : "/log-in"}
           color="warning"
         >
           LEARN MORE
