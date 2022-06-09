@@ -55,17 +55,16 @@ const style = {
 };
 
 export default function MainHeader() {
-  let { user } = useAuth();
+  let { user, logout } = useAuth();
   let navigate = useNavigate();
-  let auth = useAuth();
-
   const location = useLocation();
+
   const [openSearch, setOpenSearch] = useState(false);
   const handleOpenSearch = () => setOpenSearch(true);
   const handleCloseSearch = () => setOpenSearch(false);
 
   const Logout = async () => {
-    auth.logout(() => navigate("/"));
+    logout(() => navigate("/"));
   };
 
   return (

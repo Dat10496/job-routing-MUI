@@ -44,12 +44,11 @@ function SignInPage() {
   } = methods;
 
   const onSubmit = async (data) => {
-    let from = location.state?.from?.pathname || "/";
     let username = data.username;
     let password = data.password;
 
     auth.login(username, password, () => {
-      navigate(from, { replace: true });
+      navigate("/page/1", { replace: true });
     });
   };
 
