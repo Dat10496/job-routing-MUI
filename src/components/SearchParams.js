@@ -2,14 +2,7 @@ import { React, useEffect, useState } from "react";
 import InputBase from "@mui/material/InputBase";
 import { useSearchParams } from "react-router-dom";
 import styled from "@emotion/styled";
-import {
-  Paper,
-  alpha,
-  Divider,
-  ListItem,
-  ListItemButton,
-  ListItemText,
-} from "@mui/material";
+import { Paper, alpha, Divider, Typography } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { Box } from "@mui/system";
 import apiService from "../app/apiService";
@@ -34,12 +27,15 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 const style = {
   position: "relative",
-  top: "40%",
+  top: "45%",
   left: "50%",
+  backgroundColor: "#4b4f4f",
+  color: "white",
   transform: "translate(-50%, -50%)",
   with: 300,
-  height: 500,
-  p: 1,
+  height: 550,
+  p: 0,
+  textDecoration: "none",
 };
 
 const Search = styled("div")(({ theme }) => ({
@@ -114,27 +110,35 @@ function SearchParams() {
         />
       </Search>
       <Divider variant="middle" color="primary.dark" sx={{ mt: 1 }} />
-      {storageData
-        .filter((job) => {
-          let filter = searchParams.get("filter");
-          if (!filter) return "";
-          let name = job.title.toLowerCase();
-          return name.startsWith(filter.toLowerCase());
-        })
-        .map((job) => (
-          <Box sx={{ display: "flex", flexWrap: "wrap", ml: 2 }}>
-            <ListItem
+      <Box
+        sx={{
+          display: "flex",
+          flexWrap: "wrap",
+          p: 1,
+          ml: 1,
+          flexDirection: "column",
+          textDecoration: "none",
+          color: "white",
+        }}
+      >
+        {storageData
+          .filter((job) => {
+            let filter = searchParams.get("filter");
+            if (!filter) return "";
+            let name = job.title.toLowerCase();
+            return name.startsWith(filter.toLowerCase());
+          })
+          .map((job) => (
+            <Typography
               key={job.id}
               component={Link}
-              to={`/job/${job.id}`}
-              sx={{ color: "white", p: 0 }}
+              to={`/movie/${job.id}`}
+              sx={{ textDecoration: "none", color: "white" }}
             >
-              <ListItemButton sx={{ p: 0 }}>
-                <ListItemText primary={job.title} />
-              </ListItemButton>
-            </ListItem>
-          </Box>
-        ))}
+              {job.title}
+            </Typography>
+          ))}
+      </Box>
     </Paper>
   );
 }
