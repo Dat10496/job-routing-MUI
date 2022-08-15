@@ -6,9 +6,10 @@ import apiService from "../app/apiService";
 
 function HomePages() {
   const limit = 5;
-  const { page } = useParams();
-  const num1 = limit * (page - 1);
-  const num2 = limit * page;
+  let { page } = useParams();
+  page = parseInt(page) || 1;
+
+  const offset = limit * (page - 1);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -28,7 +29,7 @@ function HomePages() {
   return (
     <>
       <Grid container spacing={0.5}>
-        {storageData.slice(num1, num2).map((job) => (
+        {storageData.slice(offset, offset + limit).map((job) => (
           <Grid key={job.id} item xs={12} md={4}>
             <JobCard job={job} />
           </Grid>

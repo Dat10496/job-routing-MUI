@@ -65,7 +65,7 @@ export default function JobCard({ job }) {
           state={{ from: location }}
           variant="outlined"
           component={Link}
-          to={user ? `/job/${job.id}` : "/log-in"}
+          to={user ? `/jobs/${job.id}` : "/log-in"}
           color="warning"
         >
           LEARN MORE

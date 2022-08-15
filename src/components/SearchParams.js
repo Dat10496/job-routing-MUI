@@ -2,7 +2,7 @@ import { React, useEffect, useState } from "react";
 import InputBase from "@mui/material/InputBase";
 import { useSearchParams } from "react-router-dom";
 import styled from "@emotion/styled";
-import { Paper, alpha, Divider, Typography } from "@mui/material";
+import { Paper, alpha, Divider, Typography, Pagination } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { Box } from "@mui/system";
 import apiService from "../app/apiService";
@@ -26,16 +26,17 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 const style = {
-  position: "relative",
+  position: "absolute",
   top: "45%",
   left: "50%",
   backgroundColor: "#4b4f4f",
   color: "white",
   transform: "translate(-50%, -50%)",
-  with: 300,
+  width: 600,
   height: 550,
-  p: 0,
+  p: 1,
   textDecoration: "none",
+  flexWrap: "wrap",
 };
 
 const Search = styled("div")(({ theme }) => ({
@@ -63,9 +64,17 @@ const SearchIconWrapper = styled("div")(({ theme }) => ({
   justifyContent: "center",
 }));
 
-function SearchParams() {
+function SearchParams({ handleCloseSearch }) {
   let [searchParams, setSearchParams] = useSearchParams();
   const [storageData, setStorageData] = useState([]);
+
+  const [page, setPage] = useState(1);
+  const handleChange = (event, value) => {
+    setPage(value);
+  };
+
+  const limit = 15;
+  const offset = limit * (page - 1);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -79,7 +88,7 @@ function SearchParams() {
     };
 
     fetchData();
-  }, []);
+  }, [page]);
 
   return (
     <Paper elevation={24} sx={style}>
@@ -116,9 +125,11 @@ function SearchParams() {
           flexWrap: "wrap",
           p: 1,
           ml: 1,
+          mb: 1,
           flexDirection: "column",
           textDecoration: "none",
           color: "white",
+          height: 500,
         }}
       >
         {storageData
@@ -130,14 +141,27 @@ function SearchParams() {
           })
           .map((job) => (
             <Typography
-              key={job.id}
-              component={Link}
-              to={`/movie/${job.id}`}
               sx={{ textDecoration: "none", color: "white" }}
+              component={Link}
+              key={job.id}
+              to={`/jobs/${job.id}`}
+              onClick={handleCloseSearch}
             >
               {job.title}
             </Typography>
-          ))}
+          ))
+          .slice(offset, offset + limit)}
+        <Box sx={{ position: "relative", left: "20%", top: "10%" }}>
+          <Pagination
+            count={
+              searchParams.get("filter")
+                ? Math.ceil(storageData.length / limit)
+                : 0
+            }
+            page={page}
+            onChange={handleChange}
+          />
+        </Box>
       </Box>
     </Paper>
   );

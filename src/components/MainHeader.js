@@ -111,7 +111,7 @@ export default function MainHeader() {
             }}
           >
             <Paper elevation={24} sx={style} mt={0.5}>
-              <SearchParams />
+              <SearchParams handleCloseSearch={handleCloseSearch} />
             </Paper>
           </Modal>
           <Box
